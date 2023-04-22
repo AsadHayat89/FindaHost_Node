@@ -24,29 +24,12 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 10 * 1024 * 1024, // 10 MB
-    files: 5, // maximum 5 files
+    files: 10, // maximum 5 files
   },
 });
 
 router.post('/api/testingProperty', upload.array('images'),  async (req, res)=>{
-  const Property_Name=req.body.Property_Name;
-  const Email =req.body.Email;
-  const Property_Type=req.body.Property_Type;
-  const Property_PriceMoney =req.body.Property_PriceMoney;
-  const Property_Guest_Room=req.body.Property_Guest_Room;
-  const Property_Bath_Room =req.body.Property_Bath_Room;
-  const Property_Bed_Room=req.body.Property_Bed_Room;
-  const Property_Description =req.body.Property_Description;
-  const Property_Rule=req.body.Property_Rule;
-  const Property_Country =req.body.Property_Country;
-  const Property_State=req.body.Property_State;
-  const Property_City =req.body.Property_City;
-  const Property_Address=req.body.Property_Address;
-  const Property_PostalCode =req.body.Property_PostalCode;
-  const features=req.body.features;
-  const Amenties =req.body.Amenties;
-  const featuresarray=features.substring(1, features.length - 1).split(",");
-  const Amentiesarray=Amenties.substring(1, Amenties.length - 1).split(",");
+ 
  
   try {
     // Get the uploaded files from the request
@@ -55,52 +38,11 @@ router.post('/api/testingProperty', upload.array('images'),  async (req, res)=>{
     // Upload the files to Filestack
     const fileUrls = await Promise.all(
       files.map(async (file) => {
-        Stackclient.upload(file.buffer);
+        const uploadResponse = await Stackclient.upload(file.buffer);
 
+        return uploadResponse.url;
       })
-    ).then(responses => {
-      const urls = responses.map(response => response.url);
-      console.log(urls);
-      const newProperty = new Property({
-          Property_Name,
-          Property_Type,
-          Email,
-          Property_PriceMoney,
-          Property_Guest_Room,
-          Property_Bath_Room,
-          Property_Bed_Room,
-          Property_Description,
-          Property_Rule,
-          Property_Country,
-          Property_State,
-          Property_City,
-          Property_Address,
-          Property_PostalCode,
-          features:featuresarray,
-          Amenties:Amentiesarray,
-          images:urls
-        });
-        newProperty.save()
-        .then((data) => {
-          console.log(data);
-          // fs.readdir('upload/', (err, files) => {
-          //   if (err) throw err;
-          
-          //   for (const file of files) {
-          //     fs.unlink(`upload/${file}`, err => {
-          //       if (err) throw err;
-          //     });
-          //   }
-          // });
-          res.status(201).json({ "responce": [data] });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(500).json({ "responce": 'Error saving property to database' });
-        });
-        
-      //res.status(200).json({ urls });
-    });
+    );
 
     // Send the file URLs back to the client
   //  res.send({ fileUrls });
