@@ -74,7 +74,7 @@ router.post('/api/uploadProperty', upload.array('images'),  async (req, res) => 
           newProperty.save()
           .then((data) => {
             console.log(data);
-            fs.readdir('upload/', (err, file) => {
+            fs.readdir('upload/', (err, files) => {
               if (err) throw err;
             
               for (const file of files) {
