@@ -11,14 +11,14 @@ const Bid=require("./Model/bid");
 const { Upload } = require('filestack-js/build/main/lib/api/upload');
 const Property = mongoose.model('Property', PropertyScheme);
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, './upload/');
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now() + '.jpg');
-    }
- });
+const storage = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+    files: 5, // maximum 5 files
+  },
+});
+
 const upload = multer({ storage: storage });
 
 router.post('/api/uploadProperty', upload.array('images'),  async (req, res) => {
@@ -47,7 +47,7 @@ router.post('/api/uploadProperty', upload.array('images'),  async (req, res) => 
     
 
     Promise.all(
-      files.map(file => Stackclient.upload(file.path))
+      files.map(file => Stackclient.upload(file.buffer))
     )
       .then(responses => {
         const urls = responses.map(response => response.url);
