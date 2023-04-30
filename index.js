@@ -11,15 +11,7 @@ const Bid=require("./Model/bid");
 const { Upload } = require('filestack-js/build/main/lib/api/upload');
 const Property = mongoose.model('Property', PropertyScheme);
 
-// const storage = multer({
-//   storage: multer.memoryStorage(),
-//   limits: {
-//     fileSize: 10 * 1024 * 1024, // 10 MB
-//     files: 5, // maximum 5 files
-//   },
-// });
 
-// const upload = multer({ storage: storage });
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -157,6 +149,20 @@ router.post('/api/bidProperty',upload.any(), async (req, res) => {
       res.status(400).send(err);
     }
   });  
+
+router.post('/api/UpdateBid',upload.any(), async (req, res) => {
+    const id  = req.body.ID;
+    const status  = req.body.status;
+    console.log(id);
+    try {
+      const collection = await Bid.findByIdAndUpdate(id, { status }, { new: true });
+      res.json(collection);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal server error');
+    }
+  });
+  
 
 router.post('/api/bidallBidByEmail',upload.any(), async (req, res) => {
     
