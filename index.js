@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express();
+const bcrypt = require('bcrypt');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 var multer = require('multer');
 const filestack = require('filestack-js');
 const Stackclient = filestack.init('AoZD7isNqTxiQcPKyyUSBz');
@@ -10,7 +12,7 @@ const client = mongoose.connect("mongodb+srv://asad:asad123@cluster0.pog5yuk.mon
 const Bid=require("./Model/bid");
 const { Upload } = require('filestack-js/build/main/lib/api/upload');
 const Property = mongoose.model('Property', PropertyScheme);
-
+const UserScehem=require("./Model/Profile");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -18,6 +20,61 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10 MB
     files: 10, // maximum 5 files
   },
+});
+
+
+router.post('/api/signup', upload.any(), async (req, res) => {
+  const { fullName, userName, email, password,type } = req.body;
+ 
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const existingUser = await UserScehem.findOne({ email });
+    if (existingUser) throw new Error('Email already registered');
+
+    if(type==0 || type==1){
+      const user = await UserScehem.create({ fullName, userName, email, password: hashedPassword,type });
+      const token = jwt.sign({ userId: user._id }, 'secretKey');
+      res.status(201).json({ token });
+    }
+    else{
+      res.status(400).json({ error: "User type Should be Host or Landlord" });
+    }
+    
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post('/api/login', upload.any(),async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await UserScehem.findOne({ email });
+    if (!user) throw new Error('User not found');
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) throw new Error('Invalid login credentials');
+
+    const token = jwt.sign({ userId: user._id }, 'secretKey');
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+});
+
+router.get('/api/profile', async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, 'secretKey');
+    const user = await UserScehem.findById(decoded.userId);
+    if (!user) throw new Error('User not found');
+    const { fullName, userName, email } = user;
+    res.status(200).json({ fullName, userName, email });
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
 });
 
 router.post('/api/testingProperty', upload.array('images'),  async (req, res)=>{
@@ -228,16 +285,7 @@ router.get('/',(req,res)=>{
 });
 
 
-router.post('/Upload',(req,res)=>{
-    Stackclient.upload('./Images/appLogo.png')
-  .then(response => {
-    console.log(response.url);
-  })
-  .catch(error => {
-    console.error(error);
-  });
 
-});
 
 const port = process.env.PORT || 3000;
 router.listen(port, () => {
