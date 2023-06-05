@@ -22,6 +22,18 @@ const upload = multer({
   },
 });
 
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Replace '*' with the allowed origin(s) or set it dynamically based on the request origin
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Specify the allowed HTTP methods
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'); // Specify the allowed headers
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 router.post('/api/signup', upload.any(), async (req, res) => {
   const { fullName, userName, email, password,type } = req.body;
