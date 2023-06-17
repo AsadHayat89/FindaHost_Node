@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express();
-const bcrypt = require('bcrypt');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 var multer = require('multer');
