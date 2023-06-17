@@ -37,7 +37,7 @@ exports.Login=async (req, res) => {
       if (!passwordMatch) throw new Error('Invalid login credentials');
   
       const token = jwt.sign({ userId: user._id }, 'secretKey');
-      res.status(200).json({ token });
+      res.status(200).json({ responce:user });
     } catch (error) {
       res.status(401).json({ error: error.message });
     }

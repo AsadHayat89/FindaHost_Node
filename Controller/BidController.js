@@ -22,6 +22,22 @@ exports.BidProperty=async (req, res) => {
       }
     };
 
+exports.GetBidById=async(req,res)=>{
+  const id=req.body.id;
+  Bid.findById(id)
+  .then(data => {
+    if (data) {
+      res.status(200).json({ "response": data });
+      console.log(data);
+    } else {
+      res.status(404).json({ "Failed": "Property not found" });
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ "Failed": err });
+    console.log(err);
+  });
+};
 
 exports.updateBid=async (req, res) => {
     const id  = req.body.ID;

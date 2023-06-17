@@ -27,6 +27,23 @@ exports.getPropertByEmail=(req,res)=>{
       });
 };
 
+exports.getPropertById=(req,res)=>{
+  const id = req.body.id;
+  Property.findById(id)
+    .then(data => {
+      if (data) {
+        res.status(200).json({ "response": data });
+        console.log(data);
+      } else {
+        res.status(404).json({ "Failed": "Property not found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ "Failed": err });
+      console.log(err);
+    });
+};
+
 exports.UploadPropert=async (req, res) => {
     const files = req.files;
     const Property_Name=req.body.Property_Name;

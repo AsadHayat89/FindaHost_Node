@@ -81,7 +81,11 @@ router.post('/api/bidallBidByEmail',upload.any(), BidController.bidAllBidByEmail
     
 router.post('/api/GetallBids',upload.array(), BidController.getallBids);
 
+router.post('/api/GetBidById',upload.array(), BidController.GetBidById);
+
 router.post('/api/GetPropertyByEmail', upload.array(), PropertController.getPropertByEmail);
+
+router.post('/api/GetPropertyById', upload.array(), PropertController.getPropertById);
 
 router.get('/api/GetAllProperty',  PropertController.getAllProperty);
 
