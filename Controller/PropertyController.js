@@ -10,9 +10,6 @@ exports.getAllProperty=(req,res)=>{
           let landlord = await UserScehem.findOne({ email :data[i].Email });
           data[i].Email =landlord 
         }
-
-
-
         res.status(200).json({"responce":data});
         console.log(data);
       })
