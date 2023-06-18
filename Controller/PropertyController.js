@@ -2,7 +2,7 @@ const PropertyScheme= require("../Model/propertyMode");
 const mongoose = require("mongoose");
 const Property = mongoose.model('Property', PropertyScheme);
 
-exports.getAllProperty=(req,res)=>{
+exports.getAllProperty= (req,res)=>{
     Property.find({})
       .then(data => {
         
