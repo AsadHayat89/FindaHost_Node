@@ -5,8 +5,10 @@ const Property = mongoose.model('Property', PropertyScheme);
 exports.getAllProperty=(req,res)=>{
     Property.find({})
       .then(data => {
+        
+        const emailAddresses = data.map(property => property.Email);
+        console.log(emailAddresses);
         res.status(200).json({"responce":data});
-        console.log(data);
       })
       .catch(err => {
         res.status(500).json({"Responce":err});

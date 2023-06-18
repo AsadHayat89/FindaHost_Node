@@ -43,6 +43,8 @@ router.post('/api/login', upload.any(),AuthController.Login);
 
 router.get('/api/profile', AuthController.Profile);
 
+router.post('/api/GetUserByMail',upload.any(), AuthController.GetUserByEmail);
+
 // router.post('/api/testingProperty', upload.array('images'),  async (req, res)=>{
  
  
