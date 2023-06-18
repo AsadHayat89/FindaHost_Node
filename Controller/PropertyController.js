@@ -4,7 +4,15 @@ const Property = mongoose.model('Property', PropertyScheme);
 
 exports.getAllProperty=(req,res)=>{
     Property.find({})
-      .then(data => {
+      .then(async data => {
+
+        for (let i =0; i < data.length; i++){
+          let landlord = await UserScehem.findOne({ email :data[i].Email });
+          data[i].Email =landlord 
+        }
+
+
+
         res.status(200).json({"responce":data});
         console.log(data);
       })
