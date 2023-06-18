@@ -1,14 +1,23 @@
 const PropertyScheme= require("../Model/propertyMode");
 const mongoose = require("mongoose");
 const Property = mongoose.model('Property', PropertyScheme);
-
+const UserScehem=require("../Model/Profile");
 exports.getAllProperty= (req,res)=>{
     Property.find({})
-      .then(data => {
-        
-        const emailAddresses = data.map(property => property.Email);
-        console.log(emailAddresses);
-        res.status(200).json({"responce":data});
+      .then(properties => {
+        const emailAddresses = properties.map(property => property.Email);
+        UserScehem.find({ email: { $in: emailAddresses } })
+          .then(users => {
+            const propertiesWithUserData = properties.map(property => {
+              const matchingUser = users.find(user => user.email === property.Email);
+              matchingUser.password=undefined;
+              return { ...property._doc, user: matchingUser };
+            });
+            res.status(200).json({ response: propertiesWithUserData });
+          })
+          .catch(err => {
+            res.status(500).json({ response: err });
+          });
       })
       .catch(err => {
         res.status(500).json({"Responce":err});
