@@ -2,16 +2,10 @@ const PropertyScheme= require("../Model/propertyMode");
 const mongoose = require("mongoose");
 const Property = mongoose.model('Property', PropertyScheme);
 
-exports.getAllProperty=(req,res)=>{
+exports.getAllProperty= (req,res)=>{
     Property.find({})
-      .then(async data => {
-
-        for (let i =0; i < data.length; i++){
-          let landlord = await UserScehem.findOne({ email :data[i].Email });
-          data[i].Email =landlord 
-        }
+      .then(data => {
         res.status(200).json({"responce":data});
-        console.log(data);
       })
       .catch(err => {
         res.status(500).json({"Responce":err});
