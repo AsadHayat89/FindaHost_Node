@@ -9,6 +9,7 @@ var BidController=require('./Controller/BidController');
 const filestack = require('filestack-js');
 const Stackclient = filestack.init('AoZD7isNqTxiQcPKyyUSBz');
 const mongoose = require("mongoose");
+const cors = require('cors');
 const PropertyScheme= require("./Model/propertyMode");
 const client = mongoose.connect("mongodb+srv://asad:asad123@cluster0.pog5yuk.mongodb.net/?retryWrites=true&w=majority");
 const Bid=require("./Model/bid");
@@ -36,6 +37,9 @@ router.use((req, res, next) => {
     next();
   }
 });
+
+router.use(cors());
+
 
 router.post('/api/signup', upload.any(), AuthController.SignUP);
 
