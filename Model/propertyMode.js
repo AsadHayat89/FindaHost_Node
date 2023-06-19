@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const UserSchema = new Schema({
+const PropertyScheme =new mongoose.Schema({
     Property_Name: {
         type: String,
         required: true
@@ -75,4 +75,4 @@ const UserSchema = new Schema({
   });
 
   
-module.exports = UserSchema;
+module.exports = mongoose.model('Property', PropertyScheme);

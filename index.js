@@ -13,7 +13,7 @@ const PropertyScheme= require("./Model/propertyMode");
 const client = mongoose.connect("mongodb+srv://asad:asad123@cluster0.pog5yuk.mongodb.net/?retryWrites=true&w=majority");
 const Bid=require("./Model/bid");
 const { Upload } = require('filestack-js/build/main/lib/api/upload');
-const Property = mongoose.model('Property', PropertyScheme);
+
 const UserScehem=require("./Model/Profile");
 
 const upload = multer({

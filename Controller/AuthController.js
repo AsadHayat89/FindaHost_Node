@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 const UserScehem=require("../Model/Profile");
 const jwt = require('jsonwebtoken');
+
 exports.SignUP=async (req, res) => {
     const { fullName, userName, email, password,type } = req.body;
    
-  
     const hashedPassword = await bcrypt.hash(password, 10);
   
     try {

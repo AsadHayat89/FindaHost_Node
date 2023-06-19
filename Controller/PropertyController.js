@@ -1,6 +1,5 @@
-const PropertyScheme= require("../Model/propertyMode");
 const mongoose = require("mongoose");
-const Property = mongoose.model('Property', PropertyScheme);
+const Property = require("../Model/propertyMode");
 const UserScehem=require("../Model/Profile");
 exports.getAllProperty= (req,res)=>{
     Property.find({})
